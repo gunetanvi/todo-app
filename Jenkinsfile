@@ -34,5 +34,19 @@ pipeline {
                 }
             }
         }
+
+        stage('Build & Deploy Docker Container') {
+            steps {
+                script {
+                    // Stop and remove existing container if running
+                    sh 'docker stop todo-app-container || true'
+                    sh 'docker rm todo-app-container || true'
+                    
+                    // Build new image and run container
+                    sh 'docker build -t todo-app:latest .'
+                    sh 'docker run -d -p 3000:3000 --name todo-app-container todo-app:latest'
+                }
+            }
+        }
     }
 }
